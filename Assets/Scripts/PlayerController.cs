@@ -23,16 +23,22 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float groundRadius = 0.5f;
     [SerializeField] bool isGrounded;
 
+    [Header("Respawn Locations")]
+    [SerializeField] Transform respawnPoint;
+
     private void Awake() 
     {
         characterController = GetComponent<CharacterController>();
         inputs = new COMP397Labs();
         inputs.Enable();
-        //inputs = GetComponent<COMP397Labs>();
         inputs.Player.Move.performed += context => move = context.ReadValue<Vector2>();
         inputs.Player.Move.canceled += context => move = Vector2.zero;
         inputs.Player.Jump.performed += context => Jump();
     }
+
+    private void OnEnable() => inputs.Enable();
+
+    private void OnDisable() => inputs.Disable();
 
     private void FixedUpdate()
     {
@@ -68,4 +74,24 @@ public class PlayerController : MonoBehaviour
     {
         //Debug.Log(msg);
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log($"Triggering with {other.gameObject.tag}");
+
+        if(other.CompareTag("Death"))
+        {
+            characterController.enabled = false;
+            transform.position = respawnPoint.position;
+            characterController.enabled = true;
+
+        }
+    }
+
+    //IEnumerator Respawn()
+    //{
+    //    yield return null;
+
+    //    transform.Translate(transform.position + new Vector3(0, 5, 0));
+    //}
 }
