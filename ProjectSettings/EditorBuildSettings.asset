@@ -11,5 +11,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/CameraPrototype.unity
     guid: a8c57af9c5a1b514c8b57739d5367ac3
+  - enabled: 1
+    path: Assets/Scenes/GameOver.unity
+    guid: 3bb844bb56fa4eb43b5101bda73e02dd
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: e5f5a5b37a735854aa41947df430484f, type: 2}

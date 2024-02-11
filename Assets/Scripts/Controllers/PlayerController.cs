@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CharacterController))]
-public class PlayerController : MonoBehaviour
+public class PlayerController : Subject<PlayerEnum>
 {
     COMP397Labs inputs;
     Vector2 move;
@@ -67,6 +67,7 @@ public class PlayerController : MonoBehaviour
         if(isGrounded)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2.0f * gravity);
+            NotifyObservers(PlayerEnum.Jump);
         }
     }
 
@@ -84,7 +85,7 @@ public class PlayerController : MonoBehaviour
             characterController.enabled = false;
             transform.position = respawnPoint.position;
             characterController.enabled = true;
-
+            NotifyObservers(PlayerEnum.Die);
         }
     }
 
