@@ -6,9 +6,14 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : Subject<PlayerEnum>
 {
+    #region Private Fields
     COMP397Labs inputs;
     Vector2 move;
+    Camera camera;
+    Vector3 camForward, camRight;
+    #endregion
 
+    #region Serialize Fields
     [SerializeField] CharacterController characterController;
 
     [Header("Movement")]
@@ -25,6 +30,7 @@ public class PlayerController : Subject<PlayerEnum>
 
     [Header("Respawn Locations")]
     [SerializeField] Transform respawnPoint;
+    #endregion
 
     private void Awake() 
     {
@@ -34,6 +40,8 @@ public class PlayerController : Subject<PlayerEnum>
         inputs.Player.Move.performed += context => move = context.ReadValue<Vector2>();
         inputs.Player.Move.canceled += context => move = Vector2.zero;
         inputs.Player.Jump.performed += context => Jump();
+
+        camera = Camera.main;
     }
 
     private void OnEnable() => inputs.Enable();
@@ -49,7 +57,15 @@ public class PlayerController : Subject<PlayerEnum>
             velocity.y = -2.0f;
         }
 
-        Vector3 movement = new Vector3(move.x, 0, move.y) * speed * Time.fixedDeltaTime;
+        camForward = camera.transform.forward;
+        camRight = camera.transform.right;
+        camForward.y = 0.0f;
+        camRight.y = 0.0f;
+        camForward.Normalize();
+        camRight.Normalize();
+
+        Vector3 movement = (camRight * move.x + camForward * move.y) * speed * Time.fixedDeltaTime;
+
         characterController.Move(movement);
 
         velocity.y += gravity * Time.fixedDeltaTime;

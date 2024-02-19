@@ -32,8 +32,13 @@ public class PlayerStatsController : MonoBehaviour, IObserver<PlayerEnum>
 
             if (health <= 0)
             {
-                SceneManager.LoadScene("GameOver");
+                SceneController.Instance.ChangeSceneByName("GameOver");
             }
         }
+    }
+
+    public void SaveGameIntoFile()
+    {
+        SaveGameManager.Instance().SaveGame(playerSubject.transform);
     }
 }
