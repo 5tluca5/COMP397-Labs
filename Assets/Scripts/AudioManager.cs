@@ -11,25 +11,38 @@ public class AudioData
     public AudioClip audioClip;
 }
 
+/// <summary>
+/// Audio Manager is scene dependent. Which means that it will control the audios for a specific scene.
+/// </summary>
+
 public class AudioManager : MonoBehaviour, IObserver<PlayerEnum>
 {
-    [SerializeField] private List<AudioData> audios = new List<AudioData>();
-    [SerializeField] AudioSource sfxPlayer;
+    [SerializeField] private List<AudioAsset> audios = new List<AudioAsset>();
     [SerializeField] private Subject<PlayerEnum> playerSubject;
-
+    [SerializeField] string musicName;
     private void Awake()
     {
-        playerSubject = GameObject.FindGameObjectWithTag("Player").GetComponent<Subject<PlayerEnum>>();
+        var go = GameObject.FindGameObjectWithTag("Player");
 
+        if(go != null)
+            playerSubject = GameObject.FindGameObjectWithTag("Player").GetComponent<Subject<PlayerEnum>>();
+    }
+
+    private void Start()
+    {
+        var music = audios.Find(x => x.AudioName == musicName);
+        AudioController.Instance.PlayBgm(music);
     }
     private void OnEnable()
     {
-        playerSubject.AddObserver(this);
+        if(playerSubject)
+            playerSubject.AddObserver(this);
     }
 
     private void OnDisable()
     {
-        playerSubject.RemoveObserver(this);
+        if (playerSubject)
+            playerSubject.RemoveObserver(this);
     }
 
     // Update is called once per frame
@@ -40,22 +53,20 @@ public class AudioManager : MonoBehaviour, IObserver<PlayerEnum>
 
     public void OnNotify(PlayerEnum enums)
     {
+        AudioAsset asset = null;
+
         switch(enums)
         {
             case PlayerEnum.Die:
-                sfxPlayer.PlayOneShot(audios.Find(x => x.audioName == "Die").audioClip);
+                asset = audios.Find(x => x.AudioName == "Die");
+                
                 break;
             case PlayerEnum.Jump:
-                sfxPlayer.PlayOneShot(audios.Find(x => x.audioName == "Jump").audioClip);
+                asset = audios.Find(x => x.AudioName == "Jump");
                 break;
         }
+
+        AudioController.Instance.PlaySfx(asset);
     }
 
-    public void PlayerSfx(string audioName)
-    {
-        if(audios.Exists(x => audioName == x.audioName))
-        {
-            sfxPlayer.PlayOneShot(audios.Find(x => x.audioName == audioName).audioClip);
-        }
-    }
 }
