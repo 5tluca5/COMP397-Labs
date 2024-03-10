@@ -15,6 +15,7 @@ public class PlayerController : Subject<PlayerEnum>
 
     #region Serialize Fields
     [SerializeField] CharacterController characterController;
+    [SerializeField] Joystick joystick;
 
     [Header("Movement")]
     [SerializeField] float speed;
@@ -57,6 +58,7 @@ public class PlayerController : Subject<PlayerEnum>
             velocity.y = -2.0f;
         }
 
+        move = joystick.Direction;
         camForward = camera.transform.forward;
         camRight = camera.transform.right;
         camForward.y = 0.0f;
