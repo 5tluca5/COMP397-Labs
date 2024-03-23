@@ -285,6 +285,9 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 14962b5812429b1448548e7c574624ec, type: 2}
   offsetX: 0
   offsetZ: 0
+  locationFactories:
+  - FactoryName: Grass
+    Factory: {fileID: -7559002803050287095, guid: 318e9956057a51b4da68c6e85c71284b, type: 3}
 --- !u!4 &269921805
 Transform:
   m_ObjectHideFlags: 0

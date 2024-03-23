@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
+[System.Serializable]
+public class SerializableFactory
+{
+    public string FactoryName;
+    public AbstractLocationFactory Factory;
+}
+
 public class RandomGeneration : MonoBehaviour
 {
     [SerializeField] GameObject tilePrefab;
@@ -15,10 +22,15 @@ public class RandomGeneration : MonoBehaviour
 
     List<GameObject> tiles = new List<GameObject>();
 
+    [SerializeField] List<SerializableFactory> locationFactories = new List<SerializableFactory>();
+
     private void Start()
     {
         //GenerateRandomMap();
+
+        //locationFactories["GrassLocation"] = gameObject.AddComponent<FactoryGrass>();
         GeneratePerlinMap();
+
     }
 
     private void Update()
@@ -72,9 +84,9 @@ public class RandomGeneration : MonoBehaviour
 
     void SetTileMaterial(GameObject go, float random)
     {
-        int index = (int)(random * materialList.Count);
-        go.GetComponent<Renderer>().material = materialList[index];
-        return;
+        //int index = (int)(random * materialList.Count);
+        //go.GetComponent<Renderer>().material = materialList[index];
+        //return;
 
         Material material;
 
@@ -88,6 +100,7 @@ public class RandomGeneration : MonoBehaviour
                 break;
             case <= .75f:
                 material = materialList[2];
+                locationFactories.Find(x => x.FactoryName == "Grass").Factory.CreateLocation();
                 break;
             case <= 1f:
                 material = materialList[3];
@@ -98,7 +111,7 @@ public class RandomGeneration : MonoBehaviour
                 break;
         }
 
-        Debug.Log("random = " + random + "index = " + index);
+        //Debug.Log("random = " + random + "index = " + index);
 
         go.GetComponent<Renderer>().material = material;
     }
