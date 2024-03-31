@@ -3,13 +3,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
-[System.Serializable]
-public class SerializableFactory
-{
-    public string FactoryName;
-    public AbstractLocationFactory Factory;
-}
-
 public class RandomGeneration : MonoBehaviour
 {
     [SerializeField] GameObject tilePrefab;
@@ -21,8 +14,6 @@ public class RandomGeneration : MonoBehaviour
     [SerializeField] float offsetZ;
 
     List<GameObject> tiles = new List<GameObject>();
-
-    [SerializeField] List<SerializableFactory> locationFactories = new List<SerializableFactory>();
 
     private void Start()
     {
@@ -100,7 +91,6 @@ public class RandomGeneration : MonoBehaviour
                 break;
             case <= .75f:
                 material = materialList[2];
-                locationFactories.Find(x => x.FactoryName == "Grass").Factory.CreateLocation();
                 break;
             case <= 1f:
                 material = materialList[3];
